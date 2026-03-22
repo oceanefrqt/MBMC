@@ -1,4 +1,5 @@
 from monotonic_classifier import compute_recursion
+from mappings import equiv_to_key
 
 import numpy as np
 import multiprocessing as mp
