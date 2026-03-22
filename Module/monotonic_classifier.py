@@ -1,4 +1,4 @@
-from Clean_Module.mappings import equiv_to_key, equiv_to_case
+from Module.mappings import equiv_to_key, equiv_to_case
 
 import numpy as np
 from math import ceil, log, pow
