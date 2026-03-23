@@ -1,5 +1,5 @@
-from mbmc import *
-from mappings import equiv_to_key
+from .mbmc import *
+from .mappings import equiv_to_key
 
 import numpy as np
 import multiprocessing as mp

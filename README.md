@@ -76,27 +76,90 @@ The dependencies are:
 
 ---
 
-## Example Usage: GSE53733 Dataset
+## Example Usage
 
-### Retrieving and Preprocessing the Data
+Two end-to-end examples are provided under `Example/`.  Both follow the same
+three-step structure: data preparation → MBMC pipeline → evaluation.
 
-The example uses the GSE53733 dataset (primary glioblastoma, 70 samples: 23 long-term survivors with >36 months OS, 16 short-term survivors with <12 months OS, 31 intermediate survivors).
+---
 
-Download the raw data from the [GEO database](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE53733) and preprocess as follows:
+### Example 1 — Breast Cancer METABRIC
 
-- Select protein-coding genes only.
-- Normalize with TMM (Trimmed Mean of M-values) and apply a log1p transformation.
-- Filter with the Median Absolute Deviation (MAD) to remove low-variability genes.
+**Dataset:** METABRIC cohort (~630 patients with relapse, 1 708 genes after MAD
+filtering).  The `target` column encodes relapse-free survival: 0 = short,
+1 = intermediate, 2 = long.
 
-The resulting CSV has samples in rows and genes (plus a `target` column encoding the ordinal class) in columns:
+**Download:** [cBioPortal — METABRIC](https://www.cbioportal.org/study/summary?id=brca_metabric)
+(`data_mrna_illumina_microarray.txt` + `data_clinical_patient.txt`)
 
-```python
-import pandas as pd
+```bash
+cd Example/Breast_Cancer_METABRIC/
 
-data = pd.read_csv('GSE53733_data.csv', index_col=0)
+# Step 1 — preprocessing (produces breast_cancer_train.csv / test.csv)
+python step1_prepare_data.py
+
+# Step 2 — run the MBMC pipeline
+python step2_run_mbmc.py --nbcpus 4 --max-k 10 --kfold 5
+
+# Step 3 — evaluate results
+python step3_evaluate.py
 ```
 
-### Selecting the Top-Performing Gene Pairs
+**Key parameters for step 2:**
+
+| Flag | Default | Description |
+|---|---|---|
+| `--nbcpus` | 4 | Number of parallel CPU cores |
+| `--max-k` | 10 | Maximum ensemble size to evaluate |
+| `--kfold` | 5 | Number of cross-validation folds |
+| `--train` | `breast_cancer_train.csv` | Training CSV from step 1 |
+| `--test` | `breast_cancer_test.csv` | Test CSV from step 1 |
+
+**Output:** `ensemble_predictions.csv` with columns `true` and `pred` for each
+test sample.
+
+---
+
+### Example 2 — Glioblastoma GSE53733
+
+**Dataset:** GSE53733 (70 primary glioblastoma samples, ~1 837 genes after MAD
+filtering).  The `target` column encodes overall survival: 0 = short-term
+(<12 months), 1 = intermediate, 2 = long-term (>36 months).
+
+**Download:** [GEO — GSE53733](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE53733)
+
+```bash
+cd Example/Glioblastoma_GSE53733/
+
+# Step 1 — preprocessing (produces DATA/GSE53733_MAD_train.csv / test.csv)
+python step1_prepare_data.py
+
+# Step 2 — run the MBMC pipeline
+python step2_run_mbmc.py --nbcpus 4 --max-k 5 --kfold 5
+
+# Step 3 — evaluate results
+python step3_evaluate.py
+```
+
+**Key parameters for step 2:**
+
+| Flag | Default | Description |
+|---|---|---|
+| `--nbcpus` | 4 | Number of parallel CPU cores |
+| `--max-k` | 5 | Maximum ensemble size to evaluate |
+| `--kfold` | 5 | Number of cross-validation folds |
+| `--train` | `DATA/GSE53733_MAD_train.csv` | Training CSV from step 1 |
+| `--test` | `DATA/GSE53733_MAD_test.csv` | Test CSV from step 1 |
+
+**Output:** `ensemble_predictions.csv` with columns `true` and `pred` for each
+test sample.
+
+---
+
+### Selecting the Top-Performing Gene Pairs (low-level API)
+
+If you only need the preselection step (e.g. for enrichment analysis or network
+construction), you can call the Module directly:
 
 ```python
 import sys
@@ -109,7 +172,7 @@ nbcpus = 2   # number of CPUs for multiprocessing
 kfold  = 5   # number of folds for cross-validation
 k_max  = 10  # minimum number of disjoint pairs to identify
 
-data = pd.read_csv('GSE53733_data.csv', index_col=0)
+data = pd.read_csv('your_data.csv', index_col=0)
 
 # Generate all gene-pair configurations (4 monotonicity directions per pair)
 cls = stm.all_configurations(data)

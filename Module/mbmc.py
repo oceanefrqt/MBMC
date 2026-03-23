@@ -1,5 +1,5 @@
-from monotonic_classifier import compute_recursion
-from mappings import equiv_to_key
+from .monotonic_classifier import compute_recursion
+from .mappings import equiv_to_key
 
 import numpy as np
 import multiprocessing as mp
@@ -247,7 +247,7 @@ def monotonic_model_LOOCVE_multiclass(p, df, kfold):
     folds = []
     for i in range(kfold):
         start = i * fold_size
-        if i == k - 1:
+        if i == kfold - 1:
             end = len(df_shuffled)
         else:
             end = (i + 1) * fold_size

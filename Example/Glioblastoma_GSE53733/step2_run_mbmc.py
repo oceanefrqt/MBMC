@@ -1,6 +1,6 @@
 """
-Step 2 — Running the MBMC Pipeline (Breast Cancer METABRIC)
-============================================================
+Step 2 — Running the MBMC Pipeline (Glioblastoma GSE53733)
+==========================================================
 This script runs the Multi-class Bivariate Monotonic Classifier (MBMC)
 pipeline on the train / test CSVs produced by step1_prepare_data.py.
 
@@ -18,15 +18,19 @@ Usage:
                             [--nbcpus N] [--max-k K] [--kfold F]
 
 Examples:
-  # Default settings (4 CPUs, max_k=10, 5-fold CV):
+  # Default settings (4 CPUs, max_k=5, 5-fold CV):
   python step2_run_mbmc.py
 
+  # Explicit data paths:
+  python step2_run_mbmc.py --train DATA/GSE53733_MAD_train.csv \
+                            --test  DATA/GSE53733_MAD_test.csv
+
   # Custom settings:
-  python step2_run_mbmc.py --nbcpus 8 --max-k 20 --kfold 10
+  python step2_run_mbmc.py --nbcpus 8 --max-k 10 --kfold 10
 
 The script reads:
-  - breast_cancer_train.csv  (from step1_prepare_data.py)
-  - breast_cancer_test.csv   (from step1_prepare_data.py)
+  - GSE53733_MAD_train.csv  (from step1_prepare_data.py)
+  - GSE53733_MAD_test.csv   (from step1_prepare_data.py)
 
 And writes:
   - ensemble_predictions.csv — test-set predictions from the ensemble model
@@ -91,23 +95,23 @@ def load_data(train_path: str, test_path: str) -> tuple:
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        description="Run the MBMC pipeline on the Breast Cancer METABRIC dataset."
+        description="Run the MBMC pipeline on the Glioblastoma GSE53733 dataset."
     )
     parser.add_argument(
-        "--train", default="breast_cancer_train.csv",
-        help="Path to the training CSV (default: breast_cancer_train.csv)"
+        "--train", default="DATA/GSE53733_MAD_train.csv",
+        help="Path to the training CSV (default: DATA/GSE53733_MAD_train.csv)"
     )
     parser.add_argument(
-        "--test", default="breast_cancer_test.csv",
-        help="Path to the test CSV (default: breast_cancer_test.csv)"
+        "--test", default="DATA/GSE53733_MAD_test.csv",
+        help="Path to the test CSV (default: DATA/GSE53733_MAD_test.csv)"
     )
     parser.add_argument(
         "--nbcpus", type=int, default=4,
         help="Number of parallel CPU cores to use (default: 4)"
     )
     parser.add_argument(
-        "--max-k", type=int, default=10,
-        help="Maximum ensemble size to evaluate (default: 10)"
+        "--max-k", type=int, default=5,
+        help="Maximum ensemble size to evaluate (default: 5)"
     )
     parser.add_argument(
         "--kfold", type=int, default=5,
@@ -120,7 +124,7 @@ if __name__ == "__main__":
     kfold  = args.kfold
 
     print("=" * 60)
-    print("STEP 2: MBMC PIPELINE — BREAST CANCER METABRIC")
+    print("STEP 2: MBMC PIPELINE — GLIOBLASTOMA GSE53733")
     print("=" * 60)
     print(f"Parameters: nbcpus={nbcpus}, max_k={max_k}, kfold={kfold}\n")
 

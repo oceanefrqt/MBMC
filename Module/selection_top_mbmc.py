@@ -1,5 +1,5 @@
-from mbmc import *
-import dynamic_preselection as dp
+from .mbmc import *
+from . import dynamic_preselection as dp
 from collections import defaultdict
 
 import numpy as np
