@@ -2,6 +2,7 @@ from .monotonic_classifier import compute_recursion
 from .mappings import equiv_to_key
 
 import numpy as np
+from collections import defaultdict
 import multiprocessing as mp
 import copy
 import pandas as pd

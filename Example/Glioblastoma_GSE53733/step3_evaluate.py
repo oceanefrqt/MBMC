@@ -73,15 +73,9 @@ from sklearn.metrics    import (
 from sklearn.base       import BaseEstimator, ClassifierMixin, clone
 from scipy.special      import expit
 
-# ── Clean_Module path ─────────────────────────────────────────────────────────
-CLUSTER_DIR = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)),
-    "..", "..", "Cluster", "Glioblastoma",
-)
-if os.path.isdir(CLUSTER_DIR):
-    sys.path.insert(0, os.path.abspath(CLUSTER_DIR))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".."))
 
-import Module.multiclass_monotonic_classifiers_Kfold as mmck
+import Module.mbmc as mmck
 
 NBCPUS = 4    # increase to 23 on the cluster
 

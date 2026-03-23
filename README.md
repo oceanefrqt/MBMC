@@ -31,16 +31,26 @@ The preselection algorithm used internally is described in:
 
 ```
 Module/
-    mbmc.py                 Core MBMC classifier (Data, MultiClassMonotonicClassifier,
-                            error computation, cross-validation)
-    selection_top_mbmc.py   Preselection algorithm to identify the top-performing pairs
-    visualization_MBMC.py   Visualization of MBMC decision boundaries
-    monotonic_classifier.py Low-level monotonic regression algorithm (Stout 2013)
-    dynamic_preselection.py Disjoint-pair selection utilities
-    mappings.py             Key-to-configuration mappings
+    mbmc.py                    Core MBMC classifier (Data, MultiClassMonotonicClassifier,
+                               error computation, cross-validation)
+    selection_top_mbmc.py      Preselection algorithm to identify the top-performing pairs
+    visualization_MBMC.py      Visualization of MBMC decision boundaries
+    monotonic_classifier.py    Low-level monotonic regression algorithm (Stout 2013)
+    dynamic_preselection.py    Disjoint-pair selection utilities
+    mappings.py                Key-to-configuration mappings
+    metrics.py                 AUC, ROC, confusion matrix, and ensemble diversity metrics
+    prediction_functions.py    Point prediction and majority-vote ensemble functions
 
 Example/
-    identification_top_pairs.py  End-to-end example on the GSE53733 glioblastoma dataset
+    Breast_Cancer_METABRIC/
+        step1_prepare_data.py  Data preprocessing and train/test split
+        step2_run_mbmc.py      MBMC pipeline (preselection → ensemble → prediction)
+        step3_evaluate.py      Performance evaluation and benchmarking
+    Glioblastoma_GSE53733/
+        step1_prepare_data.py  Data preprocessing and train/test split
+        step2_run_mbmc.py      MBMC pipeline (preselection → ensemble → prediction)
+        step3_evaluate.py      Performance evaluation and benchmarking
+    identification_top_pairs.py  Low-level example: preselection + visualization only
 ```
 
 ### Module descriptions
@@ -53,6 +63,8 @@ Example/
 | `monotonic_classifier.py` | Low-level implementation of the isotonic regression algorithm of Stout (2013) adapted to the bivariate setting. Not intended to be called directly by end users. |
 | `dynamic_preselection.py` | Utility functions for maintaining and pruning the priority queue of candidate pairs during preselection (`update_dict`, `check_disjoint_pairs_naive`, `supp_H_above_a`, `supp_H_below_a`). |
 | `mappings.py` | Dictionaries mapping integer keys (1–4) to the `(rev, up)` boolean pair that encodes the four monotonicity directions. |
+| `metrics.py` | AUC, ROC curve, confidence interval, confusion matrix, accuracy, and ensemble diversity measures (disagreement, double-fault, entropy). |
+| `prediction_functions.py` | Point prediction functions for binary classifiers (with uncertainty and class-favouring variants) and majority-vote ensemble aggregation. |
 
 ---
 
@@ -205,8 +217,8 @@ If you use this code, please cite:
   author  = {Fourquet, Oc\'{e}ane and Afenteva, Daria and Zhang, Kaiyang and
              Hautaniemi, Sampsa and Krejca, Martin S. and Doerr, Carola and
              Schwikowski, Benno},
-  journal = {},
-  year    = {}
+  journal = {Submitted},
+  year    = {2025}
 }
 ```
 

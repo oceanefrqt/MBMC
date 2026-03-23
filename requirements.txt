@@ -1,7 +1,9 @@
 numpy
 pandas
 matplotlib
-lifelines
 scipy
+scikit-learn
+seaborn
+lifelines
 
 
